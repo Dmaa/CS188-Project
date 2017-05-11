@@ -1,1 +1,1 @@
-blahblahblah
+Hi, this is Dharma Naidu and Vikash Singh's code for our CS188 project.
