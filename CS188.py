@@ -11,18 +11,18 @@ import sklearn
 import numpy 
 import matplotlib as plt 
 
-data = pd.read_csv('~/Desktop/cs188TD.csv') 
+data = pd.read_csv('image_data.csv', header=None) 
 
 print("Data loaded")
 
-print data.shape
+print(data.shape)
 data=data.dropna()
-print data.shape
+print(data.shape)
 
-X=data.iloc[0:49999,0:622] 
+X=data.iloc[0:50000,0:622] 
 print ("Passed")
 
-Y=data.iloc[0:500, 620:622]
+Y=data.iloc[0:500, 622]
 #rint("X shape")
 
 #Y=data['Outcome']
