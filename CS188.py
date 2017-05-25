@@ -37,5 +37,8 @@ for i, (train, test) in enumerate(kfold):
     logreg = linear_model.LogisticRegression(C = 1e5)
     logreg.fit(X[train], Y[train])
     predictions = logreg.predict_proba(X[test])
+    
+    
+print("Gittest")
 
 print("Passed2")
