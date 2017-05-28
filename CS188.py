@@ -12,8 +12,10 @@ import numpy as np
 import matplotlib as plt 
 from sklearn.metrics import roc_curve, auc
 from sklearn.metrics import roc_auc_score
-from sklearn.model_selection import StratifiedKFold
+#from sklearn.model_selection import StratifiedKFold
 from sklearn import linear_model, datasets
+from sklearn.cross_validation import StratifiedKFold
+from sklearn.cross_validation import train_test_split 
 
 rows_to_train = 50000
 data = pd.read_csv('~/Desktop/cs188TD.csv', header=None) 
@@ -27,14 +29,14 @@ print(data.shape)
 X=data.iloc[0:rows_to_train,4:622] 
 print ("PassedNew")
 
-Y=data.iloc[0:rows_to_train, 622]
+Y=data.iloc[0:rows_to_train, 622] 
 #convert to matrix to avoid errors 
 X = X.as_matrix()
 Y= Y.as_matrix()
 
 AUC=[]
 
-kfold = StratifiedKFold(y = Y, n_folds = 10, shuffle = True, random_state=3)
+kfold = StratifiedKFold(y = Y, n_folds = 10, shuffle = True, random_state=5)
 
 for i, (train, test) in enumerate(kfold):
     logreg = linear_model.LogisticRegression(C = 1e5)
@@ -44,5 +46,6 @@ for i, (train, test) in enumerate(kfold):
     
 
 
-print np.mean(AUC)
+print np.mean(AUC) 
+
 
