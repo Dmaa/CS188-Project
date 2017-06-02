@@ -3,7 +3,7 @@
 """
 Created on Wed May 10 23:19:43 2017
 
-@author: vikashsingh
+@author: dharma naid and vikashsingh
 """
 #CS 188 Medical Imaging Project 
 import os
@@ -13,7 +13,7 @@ from keras.utils import np_utils
 import pandas as pd 
 import sklearn 
 import numpy as np 
-import matplotlib as plt 
+import matplotlib.pyplot as plt 
 from sklearn.metrics import roc_curve, auc
 from sklearn.metrics import roc_auc_score
 from sklearn.cross_validation import StratifiedKFold 
@@ -52,6 +52,9 @@ kfold = StratifiedKFold(y = Y, n_folds = 3, shuffle = True, random_state = 3)
 
     
 model = Sequential()
+AUC=[]
+globpred=[]
+globy_test=[]
 
 for i, (train, test) in enumerate(kfold):
     model = Sequential()
@@ -60,7 +63,9 @@ for i, (train, test) in enumerate(kfold):
     model.add(Dense(20,init='uniform', activation='sigmoid'))
     model.add(Dense(10, init='uniform', activation='relu'))
     model.add(Dense(1, init='uniform', activation='sigmoid'))
-    print("Model started") 
+    print("Model started")
+    globpred += predictionsproba.tolist()
+    globy_test += Y[test].tolist()
 
 #odel.compile(loss='mse',  optimizer='adam', metrics=['accuracy'])
 #odel.compile(loss='mean_squared_error',  optimizer='rmsprop', metrics=['accuracy'])
@@ -78,4 +83,17 @@ for i, (train, test) in enumerate(kfold):
     cvscores.append(scores[1] * 100)
 
 print(np.mean(AUC)) 
+false_positive_rate, true_positive_rate, thresholds=roc_curve(globy_test, globpred)
+roc_auc = auc(false_positive_rate, true_positive_rate)
+plt.title('Receiver Operating Characteristic')
+plt.plot(false_positive_rate, true_positive_rate, 'b',
+label='AUC = %0.2f'% roc_auc)
+plt.legend(loc='lower right')
+plt.plot([0,1],[0,1],'r--')
+plt.xlim([-0.1,1.2])
+plt.ylim([-0.1,1.2])
+plt.ylabel('True Positive Rate')
+plt.xlabel('False Positive Rate') 
+plt.show()
+plt.savefig("savedFigs/cnn")
 
