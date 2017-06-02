@@ -61,39 +61,12 @@ for x in range(0,10):
     AUC.append(roc_auc_score(testdataY, predictionsproba))
     globpred+=predictionsproba.tolist()
     globy_test+=testdataY.tolist()
-print "The mean AUC is"
-print(np.mean(AUC))
-'''kfold = StratifiedKFold(y = Y, n_folds = 10, shuffle = True, random_state = 3)
-
-
-
-for i, (train, test) in enumerate(kfold):    
-    gnb = GaussianNB()
-    gnb.fit(X[train], Y[train])
-    predictionsproba = gnb.predict_proba(X[test])[:,1]
-    
-    false_positive_rate, true_positive_rate, thresholds=roc_curve(Y[test], predictionsproba)
-    roc_auc = auc(false_positive_rate, true_positive_rate)
-    plt.title('Receiver Operating Characteristic')
-    plt.plot(false_positive_rate, true_positive_rate, 'b', 
-    label='AUC = %0.2f'% roc_auc)
-    plt.legend(loc='lower right')
-    plt.plot([0,1],[0,1],'r--')
-    plt.xlim([-0.1,1.2])
-    plt.ylim([-0.1,1.2])
-    plt.ylabel('True Positive Rate')
-    plt.xlabel('False Positive Rate') 
-    plt.show()
-    
-    AUC.append(roc_auc_score(Y[test], predictionsproba)) 
-    globpred += predictionsproba.tolist()
-    globy_test += Y[test].tolist()
-
-print(np.mean(AUC))
-'''
+print "The AUC is"
+print(roc_auc_score(globy_test, globpred))
+#print np.mean(AUC)
 false_positive_rate, true_positive_rate, thresholds=roc_curve(globy_test, globpred)
 roc_auc = auc(false_positive_rate, true_positive_rate)
-plt.title('Receiver Operating Characteristic')
+plt.title('Receiver Operating Characteristic GNB')
 plt.plot(false_positive_rate, true_positive_rate, 'b',
 label='AUC = %0.2f'% roc_auc)
 plt.legend(loc='lower right')
@@ -103,4 +76,4 @@ plt.ylim([-0.1,1.2])
 plt.ylabel('True Positive Rate')
 plt.xlabel('False Positive Rate') 
 plt.show()
-#plt.savefig("savedFigs/gnb")
+#plt.savefig("savedFigs/gnb") 

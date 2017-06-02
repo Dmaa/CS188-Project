@@ -34,21 +34,23 @@ Y=data.iloc[0:rows_to_train, 622]
 X = X.as_matrix()
 Y = Y.as_matrix()
 
-
+uniquepatients=data[0].unique()
 
 kfold = StratifiedKFold(y = Y, n_folds = 10, shuffle = True, random_state = 3)
 AUC=[]
 globpred=[]
 globy_test=[]
+
+
 for i, (train, test) in enumerate(kfold):    
     gnb = GaussianNB()
     gnb.fit(X[train], Y[train])
     predictionsproba = gnb.predict_proba(X[test])[:,1]
     
-    '''false_positive_rate, true_positive_rate, thresholds=roc_curve(Y[test], predictionsproba)
+    false_positive_rate, true_positive_rate, thresholds=roc_curve(Y[test], predictionsproba)
     roc_auc = auc(false_positive_rate, true_positive_rate)
     plt.title('Receiver Operating Characteristic')
-    plt.plot(false_positive_rate, true_positive_rate, 'b',
+    plt.plot(false_positive_rate, true_positive_rate, 'b', 
     label='AUC = %0.2f'% roc_auc)
     plt.legend(loc='lower right')
     plt.plot([0,1],[0,1],'r--')
@@ -56,7 +58,7 @@ for i, (train, test) in enumerate(kfold):
     plt.ylim([-0.1,1.2])
     plt.ylabel('True Positive Rate')
     plt.xlabel('False Positive Rate') 
-    plt.show()'''
+    plt.show()
     
     AUC.append(roc_auc_score(Y[test], predictionsproba)) 
     globpred += predictionsproba.tolist()
