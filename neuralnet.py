@@ -64,8 +64,6 @@ for i, (train, test) in enumerate(kfold):
     model.add(Dense(10, init='uniform', activation='relu'))
     model.add(Dense(1, init='uniform', activation='sigmoid'))
     print("Model started")
-    globpred += predictionsproba.tolist()
-    globy_test += Y[test].tolist()
 
 #odel.compile(loss='mse',  optimizer='adam', metrics=['accuracy'])
 #odel.compile(loss='mean_squared_error',  optimizer='rmsprop', metrics=['accuracy'])
@@ -81,7 +79,7 @@ for i, (train, test) in enumerate(kfold):
     AUC.append(roc_auc_score(Y[test],predictions))
     print("%s: %.2f%%" % (model.metrics_names[1], scores[1]*100)) 
     cvscores.append(scores[1] * 100)
-
+'''
 print(np.mean(AUC)) 
 false_positive_rate, true_positive_rate, thresholds=roc_curve(globy_test, globpred)
 roc_auc = auc(false_positive_rate, true_positive_rate)
@@ -95,5 +93,5 @@ plt.ylim([-0.1,1.2])
 plt.ylabel('True Positive Rate')
 plt.xlabel('False Positive Rate') 
 plt.show()
-plt.savefig("savedFigs/cnn")
+plt.savefig("savedFigs/cnn")'''
 

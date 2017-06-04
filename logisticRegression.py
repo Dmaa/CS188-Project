@@ -17,39 +17,48 @@ from sklearn.cross_validation import StratifiedKFold
 from sklearn.cross_validation import train_test_split 
 
 rows_to_train = 50000
-data = pd.read_csv('~/Desktop/cs188TD.csv', header=None) 
+data = pd.read_csv('~/Desktop/cs188TD.csv', header=None)  #Load the data from the csv file using pandas, and store it in "data"
 
 print("Data loaded New")
 
 print(data.shape)
-data=data.dropna()
+data=data.dropna() #Drop empty rows just in case data isn't formatted perfectly
 print(data.shape)
 
-X=data.iloc[0:rows_to_train,4:622] 
+X=data.iloc[0:rows_to_train,4:622] #Store first 622 column, or our training parameters, in "X"
 
-Y=data.iloc[0:rows_to_train, 622] 
+Y=data.iloc[0:rows_to_train, 622] #store last column, or result column, in y
+
 #convert to matrix to avoid errors 
 X = X.as_matrix()
 Y= Y.as_matrix()
 
-AUC=[]
+AUC=[] #empty auc array to store AUCs of each k fold
 
-kfold = StratifiedKFold(y = Y, n_folds = 10, shuffle = True, random_state=5)
-AUC=[]
+#make a kfold data structure with 10 folds, a shuffle, and a random seed of 5
+kfold = StratifiedKFold(y = Y, n_folds = 10, shuffle = True, random_state=5) 
+
+#empty global prediction array to store prediction probability of each k fold (Y value in AUC graph)
 globpred=[]
+
+#empty global prediction array to store test probability of each k fold (X value in AUC graph)
 globy_test=[]
-for i, (train, test) in enumerate(kfold):
-    logreg = linear_model.LogisticRegression(C = 1e5)
-    logreg.fit(X[train], Y[train])
-    predictionsproba=logreg.predict_proba(X[test])[:,1]
-    AUC.append(roc_auc_score(Y[test], predictionsproba)) 
+
+
+for i, (train, test) in enumerate(kfold): #for each kfold
+    logreg = linear_model.LogisticRegression(C = 1e5) #logreg is a logistic regression model
+    logreg.fit(X[train], Y[train]) #fit logreg using X and Y's train data
+    predictionsproba=logreg.predict_proba(X[test])[:,1] #store prediction probability in predictproba
+    AUC.append(roc_auc_score(Y[test], predictionsproba)) #append predict proba to our auc array
     
-    globpred += predictionsproba.tolist()
-    globy_test += Y[test].tolist()
+    globpred += predictionsproba.tolist() #add predictproba info to globred (for use in AUC graph)
+    globy_test += Y[test].tolist() #add Y test info to globytest(for use in AUC graph)
     
 
 
-print(np.mean(AUC))
+print(np.mean(AUC)) #print the mean AUC of all our k folds
+
+#graph the AUC graph
 false_positive_rate, true_positive_rate, thresholds=roc_curve(globy_test, globpred)
 roc_auc = auc(false_positive_rate, true_positive_rate)
 plt.title('Receiver Operating Characteristic')
