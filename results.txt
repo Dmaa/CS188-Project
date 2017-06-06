@@ -1,0 +1,8 @@
+gnb with custom splits: 
+
+	AUC of 0.733696200564
+random forest with custom splits:
+	AUC of 0.815561340604
+
+logistic regression with custom splits:
+	AUC of 0.627768552819

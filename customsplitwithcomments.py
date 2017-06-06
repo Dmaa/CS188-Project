@@ -3,7 +3,7 @@
 """
 Created on Thu Jun  1 09:58:22 2017
 
-@author: vikashsingh
+@author: dharma naidu and vikashsingh
 """
 
 #CS 188 Medical Imaging Project 
@@ -29,28 +29,34 @@ from keras.optimizers import SGD
 
 
 rows_to_train = 50000
-data = pd.read_csv('~/Desktop/cs188TD.csv', header=None) 
+data = pd.read_csv('~/Desktop/cs188TD.csv', header=None)  #Load the data from the csv file using pandas, and store it in "data"
 
 print("Data loaded New")
 
 print(data.shape)
-data=data.dropna()
+data=data.dropna() #Drop empty rows just in case data isn't formatted perfectly
 print(data.shape)
 
-X=data.iloc[0:rows_to_train,4:622] 
-print ("Data Loaded")
+X=data.iloc[0:rows_to_train,4:622] #Store first 622 column, or our training parameters, in "X"
 
-Y=data.iloc[0:rows_to_train, 622] 
+Y=data.iloc[0:rows_to_train, 622] #store last column, or result column, in y
+
 #convert to matrix to avoid errors 
 X = X.as_matrix()
-Y = Y.as_matrix()
-AUC=[]
+Y= Y.as_matrix()
+
+AUC=[] #empty auc array to store AUCs of each k fold
+
+#empty global prediction array to store prediction probability of each k fold (Y value in AUC graph)
+globpred=[]
+
+#empty global prediction array to store test probability of each k fold (X value in AUC graph)
+globy_test=[]
+
 #Store unique patient values in a list 
 uniquepatients=data[0].unique()
 #Randomly sample six patients to be used for test set 
-globpred=[]
-globy_test=[]
-for x in range(0,10):
+for x in range(0,10): #10 means 10 k folds
     testpatients=random.sample(uniquepatients, 6)
     print(testpatients)
     
@@ -66,6 +72,7 @@ for x in range(0,10):
     #gnb=GaussianNB()
     #gnb.fit(traindataX, traindataY)
     
+    #create the layers of the neural network
     model = Sequential()
     model.add(Dense(60, input_dim=618,init='uniform', activation='relu'))  
     model.add(Dense(39,init='uniform', activation='sigmoid'))
@@ -74,18 +81,21 @@ for x in range(0,10):
     model.add(Dense(1, init='uniform', activation='sigmoid'))
     print("Model started") 
 
-#odel.compile(loss='mse',  optimizer='adam', metrics=['accuracy'])
-#odel.compile(loss='mean_squared_error',  optimizer='rmsprop', metrics=['accuracy'])
+#model.compile(loss='mse',  optimizer='adam', metrics=['accuracy'])
+#model.compile(loss='mean_squared_error',  optimizer='rmsprop', metrics=['accuracy'])
     model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
     print("Model compiled")
     #verbose=0
+    #fit the model
     model.fit(np.array(traindataX), np.array(traindataY), nb_epoch=100, batch_size=9, verbose=0)
     
+    #test and evaluate the model, create AUC
     predictionsproba = model.predict_proba(testdataX)[:,1]
     print(roc_auc_score(testdataY, predictionsproba))
     AUC.append(roc_auc_score(testdataY, predictionsproba))
-    globpred+=predictionsproba.tolist()
-    globy_test+=testdataY.tolist()
+    globpred+=predictionsproba.tolist() #add predictproba info to globred (for use in AUC graph)
+    globy_test+=testdataY.tolist() #add Y test info to globytest(for use in AUC graph)
+    
 print "The AUC is"
 print(roc_auc_score(globy_test, globpred))
 #print np.mean(AUC)
