@@ -46,6 +46,7 @@ globy_test=[]
 
 
 for i, (train, test) in enumerate(kfold): #for each kfold
+    print(i)
     logreg = linear_model.LogisticRegression(C = 1e5) #logreg is a logistic regression model
     logreg.fit(X[train], Y[train]) #fit logreg using X and Y's train data
     predictionsproba=logreg.predict_proba(X[test])[:,1] #store prediction probability in predictproba
@@ -61,7 +62,7 @@ print(np.mean(AUC)) #print the mean AUC of all our k folds
 #graph the AUC graph
 false_positive_rate, true_positive_rate, thresholds=roc_curve(globy_test, globpred)
 roc_auc = auc(false_positive_rate, true_positive_rate)
-plt.title('Receiver Operating Characteristic')
+plt.title('Receiver Operating Characteristic Logistic Regression')
 plt.plot(false_positive_rate, true_positive_rate, 'b',
 label='AUC = %0.2f'% roc_auc)
 plt.legend(loc='lower right')
@@ -71,4 +72,4 @@ plt.ylim([-0.1,1.2])
 plt.ylabel('True Positive Rate')
 plt.xlabel('False Positive Rate') 
 plt.show()
-plt.savefig("savedFigs/logreg")
+#plt.savefig("savedFigs/logreg")

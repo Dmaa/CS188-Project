@@ -1,4 +1,4 @@
- #!/usr/bin/env python2
+#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 """
 Created on Sun May 28 12:11:53 2017
@@ -44,6 +44,7 @@ globpred=[]
 globy_test=[]
 
 for i, (train, test) in enumerate(kfold):    
+    print(i)
     forest = RandomForestClassifier(n_estimators = 100) #make a random forest with 100 estimators
     forest.fit(X[train], Y[train]) #fit the data using X and Y
     predictionsproba = forest.predict_proba(X[test])[:,1] #make predictions for the model
@@ -61,7 +62,7 @@ print(np.mean(AUC)) #print the mean AUC of all our k folds
 #graph the AUC graph
 false_positive_rate, true_positive_rate, thresholds=roc_curve(globy_test, globpred)
 roc_auc = auc(false_positive_rate, true_positive_rate)
-plt.title('Receiver Operating Characteristic')
+plt.title('Receiver Operating Characteristic Random Forest')
 plt.plot(false_positive_rate, true_positive_rate, 'b',
 label='AUC = %0.2f'% roc_auc)
 plt.legend(loc='lower right')

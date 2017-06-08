@@ -49,13 +49,20 @@ uniquepatients=data[0].unique()
 globpred=[]
 globy_test=[]
 for x in range(0,10):
-    testpatients=random.sample(uniquepatients, 6)
-    print(testpatients)
+    testlength=0
+    print(x)
+    #Ensure that the test set has at least 5000 cases for each fold of validation
+    while(testlength<5000):
+        x=6
+        testpatients=random.sample(uniquepatients, x) 
+        #print(testpatients)
     
+        testdata=data[data[0].isin(testpatients)]
+        testlength=testdata.shape[0]
+        x+=1;           
     testdata=data[data[0].isin(testpatients)]
     traindata=data[-(data[0].isin(testpatients))]
-    #print(testdata.shape)
-    #print(traindata.shape)
+
     #X represents model input, Y represents binary labels 
     traindataX=traindata.iloc[:,4:622]
     traindataY=traindata.iloc[:,622]
@@ -83,7 +90,7 @@ print(roc_auc_score(globy_test, globpred))
 #print np.mean(AUC)
 false_positive_rate, true_positive_rate, thresholds=roc_curve(globy_test, globpred)
 roc_auc = auc(false_positive_rate, true_positive_rate)
-plt.title('Receiver Operating Characteristic Logistic Regression')
+plt.title('Receiver Operating Characteristic Random Forest')
 plt.plot(false_positive_rate, true_positive_rate, 'b',
 label='AUC = %0.2f'% roc_auc)
 plt.legend(loc='lower right')

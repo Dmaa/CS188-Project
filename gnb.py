@@ -49,7 +49,9 @@ globy_test=[]
 
 
 for i, (train, test) in enumerate(kfold):  #for each fold in the kfold  
+    print(i)
     gnb = GaussianNB() #create a new Gaussian Naive Bayes model
+    #print(test);
     gnb.fit(X[train], Y[train]) #train the model using data from X and Y
     predictionsproba = gnb.predict_proba(X[test])[:,1]#store prediction probability in predictproba
 
@@ -63,7 +65,7 @@ print(np.mean(AUC)) #print the mean AUC of all our k folds
 #graph the AUC graph
 false_positive_rate, true_positive_rate, thresholds=roc_curve(globy_test, globpred)
 roc_auc = auc(false_positive_rate, true_positive_rate)
-plt.title('Receiver Operating Characteristic')
+plt.title('Receiver Operating Characteristic GNB')
 plt.plot(false_positive_rate, true_positive_rate, 'b',
 label='AUC = %0.2f'% roc_auc)
 plt.legend(loc='lower right')
@@ -73,4 +75,4 @@ plt.ylim([-0.1,1.2])
 plt.ylabel('True Positive Rate')
 plt.xlabel('False Positive Rate') 
 plt.show()
-p#lt.savefig("savedFigs/gnb")
+#plt.savefig("savedFigs/gnb")

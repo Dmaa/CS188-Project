@@ -51,9 +51,17 @@ uniquepatients=data[0].unique()
 globpred=[]
 globy_test=[]
 for x in range(0,10):
-    testpatients=random.sample(uniquepatients, 6)
-    print(testpatients)
+    testlength=0
+    #Ensure that the test set has at least 5000 cases for each fold of validation
+    while(testlength<5000):
+        x=6
+        testpatients=random.sample(uniquepatients, x)
+        print(testpatients)
     
+        testdata=data[data[0].isin(testpatients)]
+        testlength=testdata.shape[0]
+        x+=1; 
+        
     testdata=data[data[0].isin(testpatients)]
     traindata=data[-(data[0].isin(testpatients))]
     #print(testdata.shape)

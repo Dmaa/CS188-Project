@@ -48,7 +48,7 @@ Y = Y.as_matrix()
 AUC=[]
 cvscores=[]
 
-kfold = StratifiedKFold(y = Y, n_folds = 3, shuffle = True, random_state = 3) 
+kfold = StratifiedKFold(y = Y, n_folds = 10, shuffle = True, random_state = 3) 
 
     
 model = Sequential()
@@ -58,10 +58,8 @@ globy_test=[]
 
 for i, (train, test) in enumerate(kfold):
     model = Sequential()
-    model.add(Dense(60, input_dim=618,init='uniform', activation='relu'))  
-    model.add(Dense(39,init='uniform', activation='sigmoid'))
-    model.add(Dense(20,init='uniform', activation='sigmoid'))
-    model.add(Dense(10, init='uniform', activation='relu'))
+    model.add(Dense(10, input_dim=618,init='uniform', activation='sigmoid'))  
+    model.add(Dense(5,init='uniform', activation='sigmoid'))
     model.add(Dense(1, init='uniform', activation='sigmoid'))
     print("Model started")
 
@@ -70,20 +68,20 @@ for i, (train, test) in enumerate(kfold):
     model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
     print("Model compiled")
     #verbose=0
-    model.fit(X[train], Y[train], nb_epoch=100, batch_size=9, verbose=0)
-#evaluate model
-    scores = model.evaluate(X[test], Y[test], verbose=0)
-    predictions=model.predict(X[test])
-    print("The AUC is: ")
-    print(roc_auc_score(Y[test],predictions))
-    AUC.append(roc_auc_score(Y[test],predictions))
-    print("%s: %.2f%%" % (model.metrics_names[1], scores[1]*100)) 
-    cvscores.append(scores[1] * 100)
-'''
-print(np.mean(AUC)) 
-false_positive_rate, true_positive_rate, thresholds=roc_curve(globy_test, globpred)
-roc_auc = auc(false_positive_rate, true_positive_rate)
-plt.title('Receiver Operating Characteristic')
+    model.fit(X[train],Y[train], epochs=10, batch_size=9, verbose=0) 
+    
+    predictionsproba = model.predict(X[test]) 
+    #print(roc_auc_score(Y[test], predictionsproba))
+    AUC.append(roc_auc_score(Y[test], predictionsproba)) 
+    globpred += predictionsproba.tolist()
+    globy_test += Y[test].tolist()
+    
+print "The AUC is"
+print(roc_auc_score(globy_test, globpred)) 
+
+false_positive_rate, true_positive_rate, thresholds=roc_curve(globy_test, globpred) 
+roc_auc = auc(false_positive_rate, true_positive_rate) 
+plt.title('Receiver Operating Characteristic Neural Network')
 plt.plot(false_positive_rate, true_positive_rate, 'b',
 label='AUC = %0.2f'% roc_auc)
 plt.legend(loc='lower right')
@@ -93,5 +91,3 @@ plt.ylim([-0.1,1.2])
 plt.ylabel('True Positive Rate')
 plt.xlabel('False Positive Rate') 
 plt.show()
-plt.savefig("savedFigs/cnn")'''
-

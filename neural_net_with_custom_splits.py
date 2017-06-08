@@ -1,9 +1,9 @@
-!/usr/bin/env python2
+#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 """
 Created on Thu Jun  1 09:58:22 2017
 
-@author: vikashsingh
+@author: vikashsingh and dharma naidu
 """
 
 #CS 188 Medical Imaging Project 
@@ -29,9 +29,9 @@ from keras.optimizers import SGD
 
 
 rows_to_train = 50000
-data = pd.read_csv('~/Desktop/cs188TD.csv', header=None) 
+data = pd.read_csv('~/Desktop/cs188TD.csv', header=None)  
 
-print("Data loaded New")
+print("Data loaded New") 
 
 print(data.shape)
 data=data.dropna()
@@ -51,9 +51,17 @@ uniquepatients=data[0].unique()
 globpred=[]
 globy_test=[]
 for x in range(0,10):
-    testpatients=random.sample(uniquepatients, 6)
-    print(testpatients)
+    testlength=0
+    #Ensure that the test set has at least 5000 cases for each fold of validation
+    while(testlength<5000):
+        x=6
+        testpatients=random.sample(uniquepatients, x)
+        print(testpatients)
     
+        testdata=data[data[0].isin(testpatients)]
+        testlength=testdata.shape[0]
+        x+=1; 
+        
     testdata=data[data[0].isin(testpatients)]
     traindata=data[-(data[0].isin(testpatients))]
     #print(testdata.shape)
@@ -71,13 +79,16 @@ for x in range(0,10):
     testdataY=np.array(testdataY)
     #gnb=GaussianNB()
     #gnb.fit(traindataX, traindataY)
-    
     model = Sequential()
-    model.add(Dense(39, input_dim=618,init='uniform', activation='relu'))  
-   # model.add(Dense(39,init='uniform', activation='sigmoid'))
-    model.add(Dense(13,init='uniform', activation='sigmoid'))
-    model.add(Dense(6, init='uniform', activation='relu'))
+    model.add(Dense(19, input_dim=618,init='uniform', activation='sigmoid'))  
+    model.add(Dense(15, init='uniform', activation='sigmoid'))
+    model.add(Dense(10, init='uniform', activation='sigmoid'))
+    model.add(Dense(5, init='uniform', activation='sigmoid'))
     model.add(Dense(1, init='uniform', activation='sigmoid')) 
+
+
+
+
     print("Model started") 
 
 #odel.compile(loss='mse',  optimizer='adam', metrics=['accuracy'])
@@ -85,7 +96,7 @@ for x in range(0,10):
     model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy']) 
     print("Model compiled")
     #verbose=0
-    model.fit(traindataX,traindataY, nb_epoch=100, batch_size=9, verbose=0) 
+    model.fit(traindataX,traindataY, epochs=10, batch_size=9, verbose=0) 
     
     predictionsproba = model.predict(testdataX) 
     print(roc_auc_score(testdataY, predictionsproba))
@@ -107,4 +118,4 @@ plt.ylim([-0.1,1.2])
 plt.ylabel('True Positive Rate')
 plt.xlabel('False Positive Rate') 
 plt.show()
-#plt.savefig("savedFigs/gnb") 
+#plt.savefig("savedFigs/gnb") a
