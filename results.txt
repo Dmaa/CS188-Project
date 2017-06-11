@@ -1,11 +1,12 @@
-Neural network without custom splits
-	AUC of 0.929452492228
-
-gnb with custom splits: 
-	AUC of 0.757190201027
-
-random forest with custom splits:
-	AUC of 0.815561340604
-
-logistic regression with custom splits:
-	AUC of 0.815982975547
+Logistic Regression:
+	No Split: 0.925610051063
+	Custom Split: 0.698669237459
+GNB
+	No Split: 0.743488909174
+	Custom Split: 0.739214684458
+Random Forest:
+	No Split:0.98923585522
+	Custom Split: 0.843985730228
+Neural Network
+	No Split: 0.93080618173
+	Custom Split: 0.832697948947

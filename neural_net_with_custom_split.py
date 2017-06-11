@@ -3,7 +3,7 @@
 """
 Created on Thu Jun  1 09:58:22 2017
 
-@author: vikashsingh and dharma naidu
+@author: vikashsingh
 """
 
 #CS 188 Medical Imaging Project 
@@ -52,18 +52,22 @@ globpred=[]
 globy_test=[]
 for x in range(0,10):
     testlength=0
+    y=6
     #Ensure that the test set has at least 5000 cases for each fold of validation
-    while(testlength<5000):
-        x=6
-        testpatients=random.sample(uniquepatients, x)
-        print(testpatients)
-    
-        testdata=data[data[0].isin(testpatients)]
-        testlength=testdata.shape[0]
-        x+=1; 
+    while(testlength<5000): 
         
-    testdata=data[data[0].isin(testpatients)]
-    traindata=data[-(data[0].isin(testpatients))]
+        testpatients=random.sample(uniquepatients, y) 
+        #print(testpatients)
+    
+        testdata=data[data[0].isin(testpatients)] 
+        testlength=testdata.shape[0]
+        y+=1; 
+    
+
+    #testdata=data[data[0].isin(testpatients)]
+    #print(testpatients)
+    #print(testdata.shape[0]) 
+    traindata=data[-(data[0].isin(testpatients))]  
     #print(testdata.shape)
     #print(traindata.shape)
     #X represents model input, Y represents binary labels 
@@ -76,30 +80,30 @@ for x in range(0,10):
     traindataX=np.array(traindataX)
     traindataY=np.array(traindataY)
     testdataX=np.array(testdataX)
-    testdataY=np.array(testdataY)
+    testdataY=np.array(testdataY) 
     #gnb=GaussianNB()
     #gnb.fit(traindataX, traindataY)
+    
     model = Sequential()
-    model.add(Dense(19, input_dim=618,init='uniform', activation='sigmoid'))  
-    model.add(Dense(15, init='uniform', activation='sigmoid'))
+    model.add(Dense(30, input_dim=618,init='uniform', activation='sigmoid')) 
+    model.add(Dropout(.2))
+    model.add(Dense(50, init='uniform', activation='relu'))
+    model.add(Dropout(.2))
     model.add(Dense(10, init='uniform', activation='sigmoid'))
+    model.add(Dense(20, init='uniform', activation='sigmoid'))
     model.add(Dense(5, init='uniform', activation='sigmoid'))
-    model.add(Dense(1, init='uniform', activation='sigmoid')) 
-
-
-
-
+    model.add(Dense(1, init='uniform', activation='sigmoid'))  
     print("Model started") 
 
 #odel.compile(loss='mse',  optimizer='adam', metrics=['accuracy'])
 #odel.compile(loss='mean_squared_error',  optimizer='rmsprop', metrics=['accuracy'])
-    model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy']) 
+    model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])  
     print("Model compiled")
     #verbose=0
-    model.fit(traindataX,traindataY, epochs=10, batch_size=9, verbose=0) 
+    model.fit(traindataX,traindataY, nb_epoch=10, batch_size=9, verbose=0) 
     
     predictionsproba = model.predict(testdataX) 
-    print(roc_auc_score(testdataY, predictionsproba))
+    #print(roc_auc_score(testdataY, predictionsproba))
     AUC.append(roc_auc_score(testdataY, predictionsproba)) 
     globpred+=predictionsproba.tolist()
     globy_test+=testdataY.tolist()
@@ -118,4 +122,4 @@ plt.ylim([-0.1,1.2])
 plt.ylabel('True Positive Rate')
 plt.xlabel('False Positive Rate') 
 plt.show()
-#plt.savefig("savedFigs/gnb") a
+#plt.savefig("AllRELUNN.pdf") 
