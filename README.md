@@ -4,5 +4,3 @@ The project is a comparison of machine learning methods for prediction of whethe
 The input data is the file "cs188TD.csv", obtained from UCLA.
 
 Make sure before you run, appropriate python modules are installed.
-
-We would like to be considered for the best project award.
