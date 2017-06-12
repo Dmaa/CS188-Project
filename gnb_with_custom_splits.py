@@ -29,7 +29,7 @@ from keras.optimizers import SGD
 
 
 rows_to_train = 50000
-data = pd.read_csv('~/Desktop/cs188TD.csv', header=None) 
+data = pd.read_csv('cs188TD.csv', header=None) 
 
 print("Data loaded New")
 

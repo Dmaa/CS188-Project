@@ -16,7 +16,7 @@ from sklearn.cross_validation import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 
 rows_to_train = 50000
-data = pd.read_csv('~/Desktop/cs188TD.csv', header=None)  #Load the data from the csv file using pandas, and store it in "data"
+data = pd.read_csv('cs188TD.csv', header=None)  #Load the data from the csv file using pandas, and store it in "data"
 
 print("Data loaded New")
 
