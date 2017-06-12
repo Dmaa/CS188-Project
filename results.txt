@@ -9,4 +9,4 @@ Random Forest:
 	Custom Split: 0.843985730228
 Neural Network
 	No Split: 0.93080618173
-	Custom Split: 0.832697948947
+	Custom Split: 0.866178680636
